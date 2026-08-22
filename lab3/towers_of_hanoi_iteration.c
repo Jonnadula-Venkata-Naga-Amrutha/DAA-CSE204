@@ -1,126 +1,109 @@
 #include <stdio.h>
 #include <math.h>
-
 #define MAX 100
 
-int stackA[MAX], stackB[MAX], stackC[MAX];
-int topA = -1, topB = -1, topC = -1;
-
-void push(int stack[], int *top, int disk)
+struct Stack
 {
-    (*top)++;
-    stack[*top] = disk;
+    int disk[MAX];
+    int top;
+};
+
+void initialize(struct Stack *s)
+{
+    s->top = -1;
 }
 
-int pop(int stack[], int *top)
+int isEmpty(struct Stack *s)
 {
-    int disk = stack[*top];
-    (*top)--;
-    return disk;
+    return s->top == -1;
 }
 
-void moveDisk(char from, char to,
-              int stack1[], int *top1,
-              int stack2[], int *top2)
+void push(struct Stack *s, int disk)
 {
-    int disk;
+    s->top++;
+    s->disk[s->top] = disk;
+}
 
-    if (*top1 == -1)
-    {
-        disk = pop(stack2, top2);
-        push(stack1, top1, disk);
+int pop(struct Stack *s)
+{
+    int value = s->disk[s->top];
+    s->top--;
+    return value;
+}
 
-        printf("Move disk %d from %c to %c\n",
-               disk, to, from);
+int peek(struct Stack *s)
+{
+    return s->disk[s->top];
+}
+
+void moveDisk(struct Stack *a, struct Stack *b,
+              char nameA, char nameB)
+{
+    int diskA, diskB;
+
+    if (isEmpty(a)){
+        diskB = pop(b);
+        push(a, diskB);
+        printf("Move disk %d from %c to %c\n",diskB, nameB, nameA);
     }
-
-    else if (*top2 == -1)
-    {
-        disk = pop(stack1, top1);
-        push(stack2, top2, disk);
-
-        printf("Move disk %d from %c to %c\n",
-               disk, from, to);
-    }
-
-    else if (stack1[*top1] < stack2[*top2])
-    {
-        disk = pop(stack1, top1);
-        push(stack2, top2, disk);
-
-        printf("Move disk %d from %c to %c\n",
-               disk, from, to);
-    }
-
-    else
-    {
-        disk = pop(stack2, top2);
-        push(stack1, top1, disk);
-
-        printf("Move disk %d from %c to %c\n",
-               disk, to, from);
+    else if (isEmpty(b)){
+        diskA = pop(a);
+        push(b, diskA);
+        printf("Move disk %d from %c to %c\n", diskA, nameA, nameB);
+    }else if (peek(a) < peek(b)){
+        diskA = pop(a);
+        push(b, diskA);
+        printf("Move disk %d from %c to %c\n",diskA, nameA, nameB);
+    }else{
+        diskB = pop(b);
+        push(a, diskB);
+        printf("Move disk %d from %c to %c\n", diskB, nameB, nameA);
     }
 }
 
 int main()
 {
-    int n;
+    struct Stack source, auxiliary, destination;
+    int n, i, totalMoves;
+
+    initialize(&source);
+    initialize(&auxiliary);
+    initialize(&destination);
 
     printf("Enter number of disks: ");
     scanf("%d", &n);
 
-    for (int i = n; i >= 1; i--)
+    for (i = n; i >= 1; i--)
     {
-        push(stackA, &topA, i);
+        push(&source, i);
     }
 
-    int moves=pow(2,n)-1;
-
-    for (int i = 1; i <= moves; i++)
+    totalMoves = pow(2, n) - 1;
+    if (n % 2 != 0)
     {
-        if (n % 2 == 1)
+        for (i = 1; i <= totalMoves; i++)
         {
             if (i % 3 == 1)
-            {
-                moveDisk('A', 'C',
-                         stackA, &topA,
-                         stackC, &topC);
-            }
+                moveDisk(&source, &destination, 'S', 'D');
+
             else if (i % 3 == 2)
-            {
-                moveDisk('A', 'B',
-                         stackA, &topA,
-                         stackB, &topB);
-            }
+                moveDisk(&source, &auxiliary, 'S', 'A');
+
             else
-            {
-                moveDisk('B', 'C',
-                         stackB, &topB,
-                         stackC, &topC);
-            }
+                moveDisk(&auxiliary, &destination, 'A', 'D');
         }
-        else
+    }else{
+        for (i = 1; i <= totalMoves; i++)
         {
             if (i % 3 == 1)
-            {
-                moveDisk('A', 'B',
-                         stackA, &topA,
-                         stackB, &topB);
-            }
+                moveDisk(&source, &auxiliary, 'S', 'A');
+
             else if (i % 3 == 2)
-            {
-                moveDisk('A', 'C',
-                         stackA, &topA,
-                         stackC, &topC);
-            }
+                moveDisk(&source, &destination, 'S', 'D');
+
             else
-            {
-                moveDisk('B', 'C',
-                         stackB, &topB,
-                         stackC, &topC);
-            }
+                moveDisk(&auxiliary, &destination, 'A', 'D');
         }
     }
-
     return 0;
 }
