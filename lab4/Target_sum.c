@@ -37,7 +37,7 @@ int main(){
     scanf("%d",&n);
     int a[n];
     intialise();
-    printf("enter %d numbers=",n);
+    printf("enter %d numbers to insert into the hash table of max size 10=",n);
     for(int i=0;i<n;i++){
         scanf("%d",&a[i]);
         insert(a[i]);

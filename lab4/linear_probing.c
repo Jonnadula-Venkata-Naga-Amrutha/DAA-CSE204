@@ -25,7 +25,7 @@ int main(){
     int key,n;
     printf("enter number of elements =");
     scanf("%d",&n);
-    printf("enter %d elements to insert into hash table using linear probing\n",n);
+    printf("enter %d elements to insert into hash table of max size 10 using linear probing\n",n);
     intialize();
     for(int i=0;i<n;i++){
         scanf("%d",&key);

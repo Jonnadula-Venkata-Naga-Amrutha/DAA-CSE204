@@ -28,7 +28,7 @@ int main(){
     printf("enter n=");
     scanf("%d",&n);
     intialize();
-    printf("enter %d numbers=",n);
+    printf("enter %d numbers to insert into hash table of max size 10=",n);
     for(int i=0;i<n;i++){
         scanf("%d",&key);
         insert(key);
