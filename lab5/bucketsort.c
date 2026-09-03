@@ -1,6 +1,6 @@
 #include<stdio.h>
 void bucketsort(int a[],int n){
-    int bucket[10][200];
+    int bucket[10][100];
     int count[10];
     int pos;
     for(int i=0;i<10;i++){
